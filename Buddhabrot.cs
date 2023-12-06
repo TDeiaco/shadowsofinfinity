@@ -59,8 +59,6 @@ namespace ShadowsOfInfinity
                     var pixelY = (Rand() * frameHeight) + _minY;
 
                     // Iterate over each pixel
-                    Complex c = new Complex(pixelX, pixelY);
-                    Complex z = 0;
                     int iterations = 0;
 
                     double x = 0.0;
@@ -73,10 +71,6 @@ namespace ShadowsOfInfinity
                         var xTemp = (x * x) - (y * y) + pixelX;
                         y = (2.0 * x * y) + pixelY;
                         x = xTemp;
-
-                        // Convert z to pixel coordinates
-                        // int zx = (int)((z.Real + 2) * scale);
-                        //int zy = (int)((z.Imaginary + 2) * scale);
 
                         var zx = (x - _minX - (0.5 * pixelWidth)) / pixelWidth;
                         zx = Math.Round(zx, 0);

@@ -27,4 +27,4 @@
     The open-source community, for continuous inspiration and support.
 
 ### Continued Research
-    http://www.steckles.com/buddha/
+    http://www.steckles.com/buddha/ metropolis-hastings
