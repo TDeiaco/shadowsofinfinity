@@ -10,6 +10,11 @@ namespace ShadowsOfInfinity
 {
     public class Visagebrot : BaseRenderer
     {
+        public Visagebrot()
+        {
+            Console.WriteLine("Rendering Visagebrot");
+        }
+
         public void RunWithOptions(VisagebrotOptions opts)
         {
             var sampleCount = opts.Samples;

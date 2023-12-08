@@ -7,6 +7,11 @@ namespace ShadowsOfInfinity
 {
     public class Buddhabrot : BaseRenderer
     {
+        public Buddhabrot()
+        {
+            Console.WriteLine("Rendering Buddhabrot");
+        }
+
         public void RunWithOptions(BuddhabrotOptions opts)
         {
             var sampleCount = opts.Samples;

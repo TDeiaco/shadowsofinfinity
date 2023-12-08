@@ -10,6 +10,11 @@ namespace ShadowsOfInfinity
 {
     public class Nebulabrot : BaseRenderer
     {
+        public Nebulabrot()
+        {
+            Console.WriteLine("Rendering Nebulabrot");
+        }
+
         public void RunWithOptions(NebulabrotOptions opts)
         {
             var sampleCount = opts.Samples;

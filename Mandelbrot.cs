@@ -5,6 +5,11 @@ namespace ShadowsOfInfinity
 {
     public class Mandelbrot : BaseRenderer
     {
+        public Mandelbrot()
+        {
+            Console.WriteLine("Rendering Mandelbrot");
+        }
+
         public void RunWithOptions(MandelbrotOptions opts)
         {
             Console.WriteLine($"Width: {opts.Width}, Height: {opts.Height}");
