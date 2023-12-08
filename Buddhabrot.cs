@@ -1,7 +1,5 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
-using System.Numerics;
-using System.Reflection.Metadata.Ecma335;
 
 namespace ShadowsOfInfinity
 {
