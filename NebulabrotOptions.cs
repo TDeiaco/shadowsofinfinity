@@ -1,9 +1,15 @@
-﻿using CommandLine;
+﻿using CommandLine.Text;
+using CommandLine;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ShadowsOfInfinity
 {
-    [Verb("buddhabrot", HelpText = "Render Buddhabrot.")]
-    public class BuddhabrotOptions
+    [Verb("nebulabrot", HelpText = "Render Nebulabrot.")]
+    public class NebulabrotOptions
     {
         [Option('w', "width", Required = true, HelpText = "Set the width of the image.")]
         public int Width { get; set; }
@@ -14,7 +20,7 @@ namespace ShadowsOfInfinity
         [Option('s', "samples", Required = true, HelpText = "Number of samples to capture.")]
         public int Samples { get; set; }
 
-        [Option('r', "range", Required = true, HelpText = "Sets a range of iteration counts to generate images from.")]
-        public string Range { get; set; }
+        [Option('o', "order", Required = false, HelpText = "What color channels get what iterations levels.")]
+        public string Order { get; set; }
     }
 }

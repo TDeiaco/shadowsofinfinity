@@ -1,14 +1,14 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
 using System.Numerics;
+using System.Reflection.Metadata.Ecma335;
 
 namespace ShadowsOfInfinity
 {
-    public class Buddhabrot
+    public class Buddhabrot : BaseRenderer
     {
         public void RunWithOptions(BuddhabrotOptions opts)
         {
-            var details = opts.Details;
             var sampleCount = opts.Samples;
             var _xRes = opts.Width;
             var _yRes = opts.Height + 1; //These adjustments are to eliminate a strip of black that I'm not sure why occures
@@ -48,7 +48,11 @@ namespace ShadowsOfInfinity
                 var pixelWidth = frameWidth / _xRes;
                 var pixelHeight = frameHeight / _yRes;
 
-                int[,] histogram = new int[_xRes, _yRes];
+                double[,] histogram = new double[_xRes, _yRes];
+
+                for (int x = 0; x < _xRes; x++)
+                    for (int y = 0; y < _yRes; y++)
+                        histogram[x, y] = 1;
 
                 for (var s = 0; s < sampleCount; s++)
                 {
@@ -85,9 +89,15 @@ namespace ShadowsOfInfinity
                     }
 
                     //DO NOT INCLUDE 
-                    if (iterations != iterationCount)
+                    if (iterations > 1000 && iterations < iterationCount)
                         foreach (var stop in stops)
-                            histogram[stop.Item1, stop.Item2] += 1;
+                        {
+                            //if (details)
+                            //    histogram[stop.Item1, stop.Item2] *= 3;
+                            //else
+                                histogram[stop.Item1, stop.Item2] += 1;
+
+                        }
 
                     // every 10k samples, log progress
                     if (s % updateRate == 0)
@@ -99,12 +109,12 @@ namespace ShadowsOfInfinity
                     }
                 }
 
-                var highest = 0.0;
+                var max = 0.0;
                 for (int x = 0; x < _xRes; x++)
                     for (int y = 0; y < _yRes; y++)
                     {
                         var count = histogram[x, y];
-                        if (count > highest) highest = count;
+                        if (count > max) max = count;
                     }
 
                 var bmp = new Bitmap(_xRes, _yRes - 1);  //I DO probably want this cross platform
@@ -117,6 +127,8 @@ namespace ShadowsOfInfinity
                     }
                 }
 
+                Console.WriteLine($"Max: {max}");
+
                 for (int x = 0; x < _xRes; x++)
                 {
                     for (int y = 0; y < _yRes; y++)
@@ -125,7 +137,7 @@ namespace ShadowsOfInfinity
                             continue;
 
                         var brightness = histogram[x, y];
-                        var rgb = (int)Math.Round((double)((brightness * 255) / highest));
+                        var rgb = /*opts.Details ? Convert.ToInt32(Details(brightness, 1.0, max)) :*/ Normalize(brightness, max);
                         Color color = Color.FromArgb(rgb, rgb, rgb);
                         // Color color = Color.FromArgb(valR, valG, valB);
                         bmp.SetPixel(y - 1, x, color);
@@ -134,6 +146,33 @@ namespace ShadowsOfInfinity
 
                 bmp.Save($"buddhabrot_iters_{iterationCount.ToString("0.##E+00")}_smpls_{sampleCount.ToString("0.##E+00")}.png", ImageFormat.Png);
             }
+        }
+
+        public double fExp(double brightness)
+        {
+            var factor = 2.0;
+            var asdf = Math.Exp(-1.0 * factor * brightness);
+            var val = 1.0 - asdf;
+            return val;
+        }
+
+        public double fLog(double brightness)
+        {
+            var factor = 2.0;
+            var asdf = Math.Log(factor * (brightness+1));
+            return asdf;
+        }
+
+        public double Details(double brightness, double overexposure, double max)
+        {
+            var scale = 255.0 * overexposure / fLog(max);
+            var val = scale * fLog(brightness);
+            return val;
+        }
+
+        public int Normalize(double brightness, double highest)
+        {
+            return (int)Math.Round((double)((brightness * 255) / highest));
         }
 
         public double Rand()

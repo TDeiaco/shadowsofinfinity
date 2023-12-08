@@ -3,7 +3,7 @@ using System.Drawing.Imaging;
 
 namespace ShadowsOfInfinity
 {
-    public class Mandelbrot
+    public class Mandelbrot : BaseRenderer
     {
         public void RunWithOptions(MandelbrotOptions opts)
         {
