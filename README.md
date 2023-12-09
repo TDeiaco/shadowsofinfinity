@@ -6,7 +6,7 @@
 
 ### About the Project
 
-**Shadows of Infinity** is a console application dedicated to rendering the complex and captivating world of fractals. This project is a journey through mathematical beauty, offering stunning visualizations of the Mandelbrot and Buddhabrot sets.
+**Shadows of Infinity** is a console application dedicated to rendering the complex and captivating world of fractals. This project is a journey through mathematical beauty, offering stunning visualizations of the 4D Mandelbrot set.
 
 ---
 
@@ -27,9 +27,6 @@
     The open-source community, for continuous inspiration and support.
     https://www.brodie-tyrrell.org/bbrot/
     http://nebula.scottandmichelle.net/nebula/index.html#bbrot
-
-### NFT Ideas:
-    visagebrot_s_1000_b_8000-10000_cXXX gives very precise, and unique single sections of the brot.  Each of these could be their own NFTs.
 
 ### Continued Research
 
