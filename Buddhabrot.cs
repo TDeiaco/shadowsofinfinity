@@ -1,7 +1,4 @@
-﻿using System.Drawing;
-using System.Drawing.Imaging;
-
-namespace ShadowsOfInfinity
+﻿namespace ShadowsOfInfinity
 {
     public class Buddhabrot : BaseRenderer
     {
@@ -122,15 +119,7 @@ namespace ShadowsOfInfinity
                         if (count > max) max = count;
                     }
 
-                var bmp = new Bitmap(_xRes, _yRes - 1);  //I DO probably want this cross platform
-                for (int i = 0; i < bmp.Width; i++)
-                {
-                    for (int j = 0; j < bmp.Height; j++)
-                    {
-
-                        bmp.SetPixel(i, j, Color.Black);
-                    }
-                }
+                InitBitmap(_xRes, _yRes - 1, 0, 0, 0);
 
                 Console.WriteLine($"Max: {max}");
 
@@ -143,12 +132,12 @@ namespace ShadowsOfInfinity
 
                         var brightness = histogram[x, y];
                         var rgb = Normalize(brightness, max);
-                        Color color = Color.FromArgb(rgb, rgb, rgb);
-                        bmp.SetPixel(y - 1, x, color);
+
+                        BlitPixel(y - 1, x, rgb, rgb, rgb);
                     }
                 }
 
-                bmp.Save(RenderFileName(), _imageFormat);
+                SaveBmp();
             }
         }
 

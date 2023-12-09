@@ -1,7 +1,4 @@
-﻿using System.Drawing;
-using System.Drawing.Imaging;
-
-namespace ShadowsOfInfinity
+﻿namespace ShadowsOfInfinity
 {
     public class Visagebrot : BaseRenderer
     {
@@ -47,7 +44,6 @@ namespace ShadowsOfInfinity
             Console.WriteLine($"Iteration Band: {opts.Band}");
             Console.WriteLine($"Cycles: {opts.Cycles}");
 
-            //Console.WriteLine($"Rendering Buddhabrot with iteration count of: {iterationCount}");
             Console.WriteLine($"");  //This is important to render the progress correctly
 
             var _minX = -2.0;
@@ -65,15 +61,12 @@ namespace ShadowsOfInfinity
                 for (int y = 0; y < _yRes; y++)
                     histogram[x, y] = 1;
 
-            var bmp = new Bitmap(_xRes, _yRes - 1);  //I DO probably want this cross platform
+            InitBitmap(_xRes, _yRes - 1, 0, 0, 0);
 
             for (var cycles = 0; cycles < opts.Cycles; cycles++)
             {
                 for (var s = 0; s < sampleCount; s++)
                 {
-                    //Console.WriteLine($"Sample: {s}");
-
-                    //var asdf = Rand(2);
                     var pixelX = (Rand() * frameWidth) + _minX;
                     var pixelY = (Rand() * frameHeight) + _minY;
 
@@ -127,15 +120,6 @@ namespace ShadowsOfInfinity
                     if (count > max) max = count;
                 }
 
-            for (int i = 0; i < bmp.Width; i++)
-            {
-                for (int j = 0; j < bmp.Height; j++)
-                {
-
-                    bmp.SetPixel(i, j, Color.Black);
-                }
-            }
-
             Console.WriteLine($"Max: {max}");
 
             for (int x = 0; x < _xRes; x++)
@@ -147,12 +131,11 @@ namespace ShadowsOfInfinity
 
                     var brightness = histogram[x, y];
                     var rgb = Normalize(brightness, max);
-                    Color color = Color.FromArgb(rgb, rgb, rgb);
-                    bmp.SetPixel(y - 1, x, color);
+                    BlitPixel(y - 1, x, rgb, rgb, rgb);
                 }
             }
 
-            bmp.Save(RenderFileName(), _imageFormat);
+            SaveBmp();
         }
 
         public int Normalize(double brightness, double highest)
@@ -164,7 +147,5 @@ namespace ShadowsOfInfinity
         {
             return Math.Round(new Random().Next(0, 1000000001) / 1000000000.0, 9);
         }
-
-
     }
 }

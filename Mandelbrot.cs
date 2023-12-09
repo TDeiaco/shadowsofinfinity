@@ -1,8 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.Drawing.Imaging;
-
-namespace ShadowsOfInfinity
+﻿namespace ShadowsOfInfinity
 {
     public class Mandelbrot : BaseRenderer
     {
@@ -27,14 +23,7 @@ namespace ShadowsOfInfinity
 
             int width = opts.Width;
             int height = opts.Height;
-            Bitmap bmp = new Bitmap(width, height);  //I DO probably want this cross platform
-            for (int i = 0; i < bmp.Width; i++)
-            {
-                for (int j = 0; j < bmp.Height; j++)
-                {
-                    bmp.SetPixel(i, j, Color.Black);
-                }
-            }
+            InitBitmap(width, height, 0, 0, 0);
 
             var _xRes = opts.Width;
             var _yRes = opts.Height;
@@ -68,8 +57,7 @@ namespace ShadowsOfInfinity
                         iterations++;
                     }
 
-                    Color color = Color.FromArgb(iterations % 255, iterations % 255, iterations % 255);
-                    bmp.SetPixel(ix, iy, color);
+                    BlitPixel(ix, iy, iterations % 127, iterations % 255, iterations % 132);
 
                 }
                 Console.SetCursorPosition(0, Console.GetCursorPosition().Top - 1);
@@ -78,7 +66,7 @@ namespace ShadowsOfInfinity
 
             }
 
-            bmp.Save(RenderFileName(), _imageFormat);
+            SaveBmp();
         }
 
         public double Rand()

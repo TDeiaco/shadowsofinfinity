@@ -1,7 +1,4 @@
-﻿using System.Drawing;
-using System.Drawing.Imaging;
-
-namespace ShadowsOfInfinity
+﻿namespace ShadowsOfInfinity
 {
     public class Nebulabrot : BaseRenderer
     {
@@ -148,14 +145,7 @@ namespace ShadowsOfInfinity
                     }
             }
 
-            var bmp = new Bitmap(_xRes, _yRes - 1);  //I DO probably want this cross platform
-            for (int i = 0; i < bmp.Width; i++)
-            {
-                for (int j = 0; j < bmp.Height; j++)
-                {
-                    bmp.SetPixel(i, j, Color.Black);
-                }
-            }
+            InitBitmap(_xRes, _yRes - 1, 0, 0, 0);
 
             for (int x = 0; x < _xRes; x++)
             {
@@ -200,12 +190,11 @@ namespace ShadowsOfInfinity
                     var red = Normalize(brightnessRed, maxRed);
                     var green = Normalize(brightnessGreen, maxGreen);
                     var blue = Normalize(brightnessBlue, maxBlue);
-                    Color color = Color.FromArgb(red, green, blue);
-                    bmp.SetPixel(y - 1, x, color);
+                    BlitPixel(y - 1, x, red, green, blue);
                 }
             }
 
-            bmp.Save(RenderFileName(), _imageFormat);
+            SaveBmp();
         }
 
         public int Normalize(double brightness, double highest)
