@@ -22,5 +22,8 @@ namespace ShadowsOfInfinity
 
         [Option('b', "band", Required = true, HelpText = "Sets a band of iteration counts to produce the spectrum of the Buddhabrot.")]
         public string Band { get; set; }
+
+        [Option('c', "cycles", Required = true, HelpText = "Number of cycles to run the band.")]
+        public int Cycles { get; set; }
     }
 }

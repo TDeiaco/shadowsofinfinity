@@ -28,22 +28,12 @@
     https://www.brodie-tyrrell.org/bbrot/
     http://nebula.scottandmichelle.net/nebula/index.html#bbrot
 
+### NFT Ideas:
+    visagebrot_s_1000_b_8000-10000_cXXX gives very precise, and unique single sections of the brot.  Each of these could be their own NFTs.
+
 ### Continued Research
 
     Remove samples from the main Cariods
     Update colorization with R = 500 G = 5000 B = 50000
 
-    iteration time i exceeds some minimum iteration time k with k < n. For example, you could use k = 1000 and n = 10000, i.e. keep only those samples that do not escape before their 1000th iteration but do escape before their 10000th iteration. 
-
     http://www.steckles.com/buddha/ metropolis-hastings
-
-
-    ansi shadow
-    big cheif
-    double shorts
-    gothic
-    mini
-    pepper
-    small slant
-    speed
-    tombstone

@@ -5,18 +5,25 @@ namespace ShadowsOfInfinity
 {
     public class Buddhabrot : BaseRenderer
     {
+        private BuddhabrotOptions _opts;
+
         public Buddhabrot()
         {
             Console.WriteLine("Rendering Buddhabrot");
         }
 
+        public override string RenderFileName()
+        {
+            return $"buddhabrot_s_{_opts.Samples}_{GetTimestamp()}.{_imageFormat.ToString().ToLower()}";
+        }
+
         public void RunWithOptions(BuddhabrotOptions opts)
         {
-            var sampleCount = opts.Samples;
+            _opts = opts;
             var _xRes = opts.Width;
             var _yRes = opts.Height + 1; //These adjustments are to eliminate a strip of black that I'm not sure why occures
 
-            var updateRate = sampleCount / 100;
+            var updateRate = opts.Samples / 100;
             if (updateRate <= 0) updateRate = 1;
 
             var split = opts.Range.Split('-');
@@ -35,7 +42,8 @@ namespace ShadowsOfInfinity
             }
 
             Console.WriteLine($"Width: {opts.Width}, Height: {opts.Height}");
-            Console.WriteLine($"Samples {sampleCount}");
+            Console.WriteLine($"Samples: {opts.Samples}");
+            Console.WriteLine($"Range: {opts.Range}");
 
             for (int iterationCount = startRange; iterationCount <= endRange; iterationCount++)
             {
@@ -57,7 +65,7 @@ namespace ShadowsOfInfinity
                     for (int y = 0; y < _yRes; y++)
                         histogram[x, y] = 1;
 
-                for (var s = 0; s < sampleCount; s++)
+                for (var s = 0; s < opts.Samples; s++)
                 {
                     //Console.WriteLine($"Sample: {s}");
 
@@ -91,21 +99,15 @@ namespace ShadowsOfInfinity
                         iterations++;
                     }
 
-                    //DO NOT INCLUDE 
-                    if (iterations > 1000 && iterations < iterationCount)
+                    //Only capture trajectories that escape 
+                    if (iterations != iterationCount)
                         foreach (var stop in stops)
-                        {
-                            //if (details)
-                            //    histogram[stop.Item1, stop.Item2] *= 3;
-                            //else
-                                histogram[stop.Item1, stop.Item2] += 1;
-
-                        }
+                            histogram[stop.Item1, stop.Item2] += 1;
 
                     // every 10k samples, log progress
                     if (s % updateRate == 0)
                     {
-                        var progress = Math.Round((double)(s + 1) / sampleCount * 100);
+                        var progress = Math.Round((double)(s + 1) / opts.Samples * 100);
 
                         Console.SetCursorPosition(0, Console.GetCursorPosition().Top - 1);
                         Console.WriteLine($"Render progress: {progress + 1}% ...");
@@ -140,14 +142,13 @@ namespace ShadowsOfInfinity
                             continue;
 
                         var brightness = histogram[x, y];
-                        var rgb = /*opts.Details ? Convert.ToInt32(Details(brightness, 1.0, max)) :*/ Normalize(brightness, max);
+                        var rgb = Normalize(brightness, max);
                         Color color = Color.FromArgb(rgb, rgb, rgb);
-                        // Color color = Color.FromArgb(valR, valG, valB);
                         bmp.SetPixel(y - 1, x, color);
                     }
                 }
 
-                bmp.Save($"buddhabrot_iters_{iterationCount.ToString("0.##E+00")}_smpls_{sampleCount.ToString("0.##E+00")}.png", ImageFormat.Png);
+                bmp.Save(RenderFileName(), _imageFormat);
             }
         }
 
@@ -162,7 +163,7 @@ namespace ShadowsOfInfinity
         public double fLog(double brightness)
         {
             var factor = 2.0;
-            var asdf = Math.Log(factor * (brightness+1));
+            var asdf = Math.Log(factor * (brightness + 1));
             return asdf;
         }
 

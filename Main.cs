@@ -10,7 +10,8 @@ namespace ShadowsOfInfinity
                 .WithParsed((BuddhabrotOptions opts) => new Buddhabrot().RunWithOptions(opts))
                 .WithParsed((MandelbrotOptions opts) => new Mandelbrot().RunWithOptions(opts))
                 .WithParsed((NebulabrotOptions opts) => new Nebulabrot().RunWithOptions(opts))
-                .WithParsed((VisagebrotOptions opts) => new Visagebrot().RunWithOptions(opts));
+                .WithParsed((VisagebrotOptions opts) => new Visagebrot().RunWithOptions(opts))
+                .WithNotParsed((errs) => HandleParseError(errs));
         }
 
         static void HandleParseError(IEnumerable<Error> errs)

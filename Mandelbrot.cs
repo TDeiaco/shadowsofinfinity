@@ -1,19 +1,29 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Drawing.Imaging;
 
 namespace ShadowsOfInfinity
 {
     public class Mandelbrot : BaseRenderer
     {
+        private MandelbrotOptions _opts;
         public Mandelbrot()
         {
             Console.WriteLine("Rendering Mandelbrot");
         }
 
+        public override string RenderFileName()
+        {
+            return $"Visagebrot_i_{_opts.Iterations}_{GetTimestamp()}.{_imageFormat.ToString().ToLower()}";
+        }
+
         public void RunWithOptions(MandelbrotOptions opts)
         {
+            _opts = opts;
             Console.WriteLine($"Width: {opts.Width}, Height: {opts.Height}");
             Console.WriteLine($"Iterations: {opts.Iterations}");
+
+            Console.WriteLine($"...");
 
             int width = opts.Width;
             int height = opts.Height;
@@ -28,8 +38,8 @@ namespace ShadowsOfInfinity
 
             var _xRes = opts.Width;
             var _yRes = opts.Height;
-            var _minX = -2.0;
-            var _maxX = 1.0;
+            var _minX = -1.75;
+            var _maxX = 0.5;
             var _minY = -1.0;
             var _maxY = 1.0;
 
@@ -62,42 +72,18 @@ namespace ShadowsOfInfinity
                     bmp.SetPixel(ix, iy, color);
 
                 }
-                Console.WriteLine($"X: {ix}");
+                Console.SetCursorPosition(0, Console.GetCursorPosition().Top - 1);
+                var progress = Math.Round((((double)ix + 1) / _xRes) * 100);
+                Console.WriteLine($"Render progress: {progress}%...");
 
             }
 
-            bmp.Save($"mandelbrot{DateTime.Now.Ticks}.png", ImageFormat.Png);
-
+            bmp.Save(RenderFileName(), _imageFormat);
         }
 
         public double Rand()
         {
             return Math.Round(new Random().Next(0, 1000000001) / 1000000000.0, 9);
         }
-
-        // this normalizes the full iteration count on each pixel within a range of 0 - 255
-        // and then pushes this to an image that can be sent to the HTML UI
-        public void RenderPathDensity(int xRes, int yRes, Bitmap bmp, double[] pathDensitySpace)
-        {
-            var highest = 0.0;
-            var lowest = 0.0;
-            foreach (var d in pathDensitySpace)
-            {
-                if (highest < d) highest = d;
-                if (lowest > d) lowest = d;
-            }
-
-            var index = 0;
-            foreach (var d in pathDensitySpace)
-            {
-                var x = index % xRes;
-                var y = (int)Math.Truncate((double)(index / xRes));
-
-                var val = (int)((d * 255) / highest);
-                bmp.SetPixel(x, y, Color.FromArgb(255, val, val, val));
-                index += 1;
-            }
-        }
     }
-
 }

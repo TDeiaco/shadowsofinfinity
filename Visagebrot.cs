@@ -5,13 +5,21 @@ namespace ShadowsOfInfinity
 {
     public class Visagebrot : BaseRenderer
     {
+        private VisagebrotOptions _opts;
+
         public Visagebrot()
         {
             Console.WriteLine("Rendering Visagebrot");
         }
 
+        public override string RenderFileName()
+        {
+            return $"visagebrot_s_{_opts.Samples}_b_{_opts.Band}_c_{_opts.Cycles}_{GetTimestamp()}.{_imageFormat.ToString().ToLower()}";
+        }
+
         public void RunWithOptions(VisagebrotOptions opts)
         {
+            _opts = opts;
             var sampleCount = opts.Samples;
             var _xRes = opts.Width;
             var _yRes = opts.Height + 1; //These adjustments are to eliminate a strip of black that I'm not sure why occures
@@ -35,7 +43,9 @@ namespace ShadowsOfInfinity
             if (updateRate <= 0) updateRate = 1;
 
             Console.WriteLine($"Width: {opts.Width}, Height: {opts.Height}");
-            Console.WriteLine($"Samples {sampleCount}");
+            Console.WriteLine($"Samples: {sampleCount}");
+            Console.WriteLine($"Iteration Band: {opts.Band}");
+            Console.WriteLine($"Cycles: {opts.Cycles}");
 
             //Console.WriteLine($"Rendering Buddhabrot with iteration count of: {iterationCount}");
             Console.WriteLine($"");  //This is important to render the progress correctly
@@ -55,52 +65,57 @@ namespace ShadowsOfInfinity
                 for (int y = 0; y < _yRes; y++)
                     histogram[x, y] = 1;
 
-            for (var s = 0; s < sampleCount; s++)
+            var bmp = new Bitmap(_xRes, _yRes - 1);  //I DO probably want this cross platform
+
+            for (var cycles = 0; cycles < opts.Cycles; cycles++)
             {
-                //Console.WriteLine($"Sample: {s}");
-
-                //var asdf = Rand(2);
-                var pixelX = (Rand() * frameWidth) + _minX;
-                var pixelY = (Rand() * frameHeight) + _minY;
-
-                // Iterate over each pixel
-                int iterations = 0;
-
-                double x = 0.0;
-                double y = 0.0;
-
-                var stops = new List<(int, int)>();
-
-                while (((x * x) + (y * y) <= 4.0) && iterations < endBand)
+                for (var s = 0; s < sampleCount; s++)
                 {
-                    var xTemp = (x * x) - (y * y) + pixelX;
-                    y = (2.0 * x * y) + pixelY;
-                    x = xTemp;
+                    //Console.WriteLine($"Sample: {s}");
 
-                    var zx = (x - _minX - (0.5 * pixelWidth)) / pixelWidth;
-                    zx = Math.Round(zx, 0);
+                    //var asdf = Rand(2);
+                    var pixelX = (Rand() * frameWidth) + _minX;
+                    var pixelY = (Rand() * frameHeight) + _minY;
 
-                    var zy = (_maxY - y + (0.5 * pixelHeight)) / pixelHeight;
-                    zy = Math.Round(zy, 0);
+                    // Iterate over each pixel
+                    int iterations = 0;
 
-                    if (zx >= 0 && zx < _xRes && zy >= 0 && zy < _yRes)
-                        stops.Add(((int)zx, (int)zy));
+                    double x = 0.0;
+                    double y = 0.0;
 
-                    iterations++;
-                }
+                    var stops = new List<(int, int)>();
 
-                //DO NOT INCLUDE 
-                if (iterations > startBand && iterations < endBand)
-                    foreach (var stop in stops)
-                        histogram[stop.Item1, stop.Item2] += 1;
+                    while (((x * x) + (y * y) <= 4.0) && iterations < endBand)
+                    {
+                        var xTemp = (x * x) - (y * y) + pixelX;
+                        y = (2.0 * x * y) + pixelY;
+                        x = xTemp;
 
-                // every 10k samples, log progress
-                if (s % updateRate == 0)
-                {
-                    var progress = Math.Round((double)(s + 1) / sampleCount * 100);
+                        var zx = (x - _minX - (0.5 * pixelWidth)) / pixelWidth;
+                        zx = Math.Round(zx, 0);
 
-                    Console.SetCursorPosition(0, Console.GetCursorPosition().Top - 1);
-                    Console.WriteLine($"Render progress: {progress + 1}% ...");
+                        var zy = (_maxY - y + (0.5 * pixelHeight)) / pixelHeight;
+                        zy = Math.Round(zy, 0);
+
+                        if (zx >= 0 && zx < _xRes && zy >= 0 && zy < _yRes)
+                            stops.Add(((int)zx, (int)zy));
+
+                        iterations++;
+                    }
+
+                    //Only capture trajectories that escape 
+                    if (iterations > startBand && iterations < endBand)
+                        foreach (var stop in stops)
+                            histogram[stop.Item1, stop.Item2] += 1;
+
+                    // every 10k samples, log progress
+                    if (s % updateRate == 0)
+                    {
+                        var progress = Math.Round((double)(s + 1) / sampleCount * 100);
+
+                        Console.SetCursorPosition(0, Console.GetCursorPosition().Top - 1);
+                        Console.WriteLine($"Render progress: {cycles+1}/{opts.Cycles} {progress + 1}% ...");
+                    }
                 }
             }
 
@@ -112,7 +127,6 @@ namespace ShadowsOfInfinity
                     if (count > max) max = count;
                 }
 
-            var bmp = new Bitmap(_xRes, _yRes - 1);  //I DO probably want this cross platform
             for (int i = 0; i < bmp.Width; i++)
             {
                 for (int j = 0; j < bmp.Height; j++)
@@ -138,7 +152,7 @@ namespace ShadowsOfInfinity
                 }
             }
 
-            bmp.Save($"visagebrot{Guid.NewGuid()}.png", ImageFormat.Png);
+            bmp.Save(RenderFileName(), _imageFormat);
         }
 
         public int Normalize(double brightness, double highest)
@@ -150,5 +164,7 @@ namespace ShadowsOfInfinity
         {
             return Math.Round(new Random().Next(0, 1000000001) / 1000000000.0, 9);
         }
+
+
     }
 }

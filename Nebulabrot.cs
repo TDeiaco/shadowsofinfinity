@@ -5,13 +5,20 @@ namespace ShadowsOfInfinity
 {
     public class Nebulabrot : BaseRenderer
     {
+        private NebulabrotOptions _opts;
         public Nebulabrot()
         {
             Console.WriteLine("Rendering Nebulabrot");
         }
 
+        public override string RenderFileName()
+        {
+            return $"nebulabrot_s_{_opts.Samples}_o_{_opts.Order}_{GetTimestamp()}.{_imageFormat.ToString().ToLower()}";
+        }
+
         public void RunWithOptions(NebulabrotOptions opts)
         {
+            _opts = opts;
             var sampleCount = opts.Samples;
             var _xRes = opts.Width;
             var _yRes = opts.Height + 1; //These adjustments are to eliminate a strip of black that I'm not sure why occures
@@ -37,7 +44,8 @@ namespace ShadowsOfInfinity
             }
 
             Console.WriteLine($"Width: {opts.Width}, Height: {opts.Height}");
-            Console.WriteLine($"Samples {sampleCount}");
+            Console.WriteLine($"Samples: {sampleCount}");
+            Console.WriteLine($"Order: {opts.Order}");
 
             var _minX = -2.0;
             var _maxX = 1.0;
@@ -90,7 +98,7 @@ namespace ShadowsOfInfinity
                         iterations++;
                     }
 
-                    //DO NOT INCLUDE 
+                    //Only capture trajectories that escape
                     if (iterations != iterationCount)
                         foreach (var stop in stops)
                         {
@@ -197,7 +205,7 @@ namespace ShadowsOfInfinity
                 }
             }
 
-            bmp.Save($"nebulabrot{Guid.NewGuid()}.png", ImageFormat.Png);
+            bmp.Save(RenderFileName(), _imageFormat);
         }
 
         public int Normalize(double brightness, double highest)

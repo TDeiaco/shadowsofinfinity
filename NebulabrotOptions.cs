@@ -20,7 +20,7 @@ namespace ShadowsOfInfinity
         [Option('s', "samples", Required = true, HelpText = "Number of samples to capture.")]
         public int Samples { get; set; }
 
-        [Option('o', "order", Required = false, HelpText = "What color channels get what iterations levels.")]
+        [Option('o', "order", Required = false, HelpText = "Channel order, which color channels get what iteration levels.")]
         public string Order { get; set; }
     }
 }
