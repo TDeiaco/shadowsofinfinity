@@ -1,6 +1,6 @@
 ﻿# Shadows of Infinity
 
-## _Exploring the Mystical Depths of Fractals_
+## _Exploring the Infinite Depths of 4D Fractal Space_
 
 ---
 
