@@ -14,7 +14,7 @@ namespace ShadowsOfInfinity
 
         public override string RenderFileName()
         {
-            return $"Visagebrot_i_{_opts.Iterations}_{GetTimestamp()}.{_imageFormat.ToString().ToLower()}";
+            return $"mandelbrot_i_{_opts.Iterations}_{GetTimestamp()}.{_imageFormat.ToString().ToLower()}";
         }
 
         public void RunWithOptions(MandelbrotOptions opts)
