@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing.Imaging;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing.Imaging;
 
 namespace ShadowsOfInfinity
 {
@@ -13,10 +8,9 @@ namespace ShadowsOfInfinity
 
         public BaseRenderer()
         {
-            Console.WriteLine("  _                                            ");
-            Console.WriteLine(" /_`/_ _   _/_       _  _ _/|  /_ _/|._  ._/_  ");
-            Console.WriteLine("._// //_|/_//_/|/|/_\\  /_//   // // // // / /_/");
-            Console.WriteLine("                                            _/ ");
+            Console.WriteLine("╔═╗┬ ┬┌─┐┌┬┐┌─┐┬ ┬┌─┐  ┌─┐┌─┐  ╦┌┐┌┌─┐┬┌┐┌┬┌┬┐┬ ┬");
+            Console.WriteLine("╚═╗├─┤├─┤ │││ ││││└─┐  │ │├┤   ║│││├┤ │││││ │ └┬┘");
+            Console.WriteLine("╚═╝┴ ┴┴ ┴─┴┘└─┘└┴┘└─┘  └─┘└    ╩┘└┘└  ┴┘└┘┴ ┴  ┴ ");
         }
 
         public string GetTimestamp()
