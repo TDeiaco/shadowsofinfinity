@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32804.467
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShadowsOfInfinity", "ShadowsOfInfinity.csproj", "{FEBC9D87-08F1-40DA-B487-E96EAB6AA155}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShadowsOfInfinity.Exe", "ShadowsOfInfinity.Exe\ShadowsOfInfinity.Exe.csproj", "{FEBC9D87-08F1-40DA-B487-E96EAB6AA155}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShadowsOfInfinity.Orchestrator", "ShadowsOfInfinity.Orchestrator\ShadowsOfInfinity.Orchestrator.csproj", "{B332C4CE-7C96-4DE6-A4F8-4C2C9EBA9BA7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{FEBC9D87-08F1-40DA-B487-E96EAB6AA155}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FEBC9D87-08F1-40DA-B487-E96EAB6AA155}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FEBC9D87-08F1-40DA-B487-E96EAB6AA155}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B332C4CE-7C96-4DE6-A4F8-4C2C9EBA9BA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B332C4CE-7C96-4DE6-A4F8-4C2C9EBA9BA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B332C4CE-7C96-4DE6-A4F8-4C2C9EBA9BA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B332C4CE-7C96-4DE6-A4F8-4C2C9EBA9BA7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

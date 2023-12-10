@@ -1,4 +1,4 @@
-﻿namespace ShadowsOfInfinity
+﻿namespace ShadowsOfInfinity.Exe
 {
     public class Buddhabrot : BaseRenderer
     {
@@ -67,8 +67,8 @@
                     //Console.WriteLine($"Sample: {s}");
 
                     //var asdf = Rand(2);
-                    var pixelX = (Rand() * frameWidth) + _minX;
-                    var pixelY = (Rand() * frameHeight) + _minY;
+                    var pixelX = Rand() * frameWidth + _minX;
+                    var pixelY = Rand() * frameHeight + _minY;
 
                     // Iterate over each pixel
                     int iterations = 0;
@@ -78,16 +78,16 @@
 
                     var stops = new List<(int, int)>();
 
-                    while (((x * x) + (y * y) <= 4.0) && iterations < iterationCount)
+                    while (x * x + y * y <= 4.0 && iterations < iterationCount)
                     {
-                        var xTemp = (x * x) - (y * y) + pixelX;
-                        y = (2.0 * x * y) + pixelY;
+                        var xTemp = x * x - y * y + pixelX;
+                        y = 2.0 * x * y + pixelY;
                         x = xTemp;
 
-                        var zx = (x - _minX - (0.5 * pixelWidth)) / pixelWidth;
+                        var zx = (x - _minX - 0.5 * pixelWidth) / pixelWidth;
                         zx = Math.Round(zx, 0);
 
-                        var zy = (_maxY - y + (0.5 * pixelHeight)) / pixelHeight;
+                        var zy = (_maxY - y + 0.5 * pixelHeight) / pixelHeight;
                         zy = Math.Round(zy, 0);
 
                         if (zx >= 0 && zx < _xRes && zy >= 0 && zy < _yRes)
@@ -165,7 +165,7 @@
 
         public int Normalize(double brightness, double highest)
         {
-            return (int)Math.Round((double)((brightness * 255) / highest));
+            return (int)Math.Round((double)(brightness * 255 / highest));
         }
 
         public double Rand()

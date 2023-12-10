@@ -1,6 +1,6 @@
 ﻿using CommandLine;
 
-namespace ShadowsOfInfinity
+namespace ShadowsOfInfinity.Exe
 {
     [Verb("buddhabrot", HelpText = "Render Buddhabrot.")]
     public class BuddhabrotOptions

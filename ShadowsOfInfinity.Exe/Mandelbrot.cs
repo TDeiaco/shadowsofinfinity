@@ -1,4 +1,4 @@
-﻿namespace ShadowsOfInfinity
+﻿namespace ShadowsOfInfinity.Exe
 {
     public class Mandelbrot : BaseRenderer
     {
@@ -41,17 +41,17 @@
             {
                 for (int iy = 0; iy < _yRes; iy++)
                 {
-                    var pixelX = _minX + ((pixelWidth * ix) + (0.5 * pixelWidth));
-                    var pixelY = _maxY - ((pixelHeight * iy) - (0.5 * pixelHeight));
+                    var pixelX = _minX + (pixelWidth * ix + 0.5 * pixelWidth);
+                    var pixelY = _maxY - (pixelHeight * iy - 0.5 * pixelHeight);
 
                     double x = 0.0;
                     double y = 0.0;
                     var iterations = 0;
 
-                    while ((x * x) + (y * y) <= 4.0 && iterations < opts.Iterations)
+                    while (x * x + y * y <= 4.0 && iterations < opts.Iterations)
                     {
-                        var xTemp = (x * x) - (y * y) + pixelX;
-                        y = (2.0 * x * y) + pixelY;
+                        var xTemp = x * x - y * y + pixelX;
+                        y = 2.0 * x * y + pixelY;
                         x = xTemp;
 
                         iterations++;
@@ -61,7 +61,7 @@
 
                 }
                 Console.SetCursorPosition(0, Console.GetCursorPosition().Top - 1);
-                var progress = Math.Round((((double)ix + 1) / _xRes) * 100);
+                var progress = Math.Round(((double)ix + 1) / _xRes * 100);
                 Console.WriteLine($"Render progress: {progress}%...");
 
             }

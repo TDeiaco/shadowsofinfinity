@@ -1,6 +1,6 @@
 ﻿using CommandLine;
 
-namespace ShadowsOfInfinity
+namespace ShadowsOfInfinity.Exe
 {
 
     [Verb("mandelbrot", HelpText = "Render Mandelbrot.")]

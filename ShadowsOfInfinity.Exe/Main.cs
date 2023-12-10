@@ -1,6 +1,6 @@
 ﻿using CommandLine;
 
-namespace ShadowsOfInfinity
+namespace ShadowsOfInfinity.Exe
 {
     public class ShadowsOfInfinity
     {

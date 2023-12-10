@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ShadowsOfInfinity
+namespace ShadowsOfInfinity.Exe
 {
     [Verb("nebulabrot", HelpText = "Render Nebulabrot.")]
     public class NebulabrotOptions

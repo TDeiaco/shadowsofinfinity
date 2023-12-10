@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
 
-namespace ShadowsOfInfinity
+namespace ShadowsOfInfinity.Exe
 {
     public abstract class BaseRenderer
     {

@@ -1,4 +1,4 @@
-﻿namespace ShadowsOfInfinity
+﻿namespace ShadowsOfInfinity.Exe
 {
     public class Visagebrot : BaseRenderer
     {
@@ -67,8 +67,8 @@
             {
                 for (var s = 0; s < sampleCount; s++)
                 {
-                    var pixelX = (Rand() * frameWidth) + _minX;
-                    var pixelY = (Rand() * frameHeight) + _minY;
+                    var pixelX = Rand() * frameWidth + _minX;
+                    var pixelY = Rand() * frameHeight + _minY;
 
                     // Iterate over each pixel
                     int iterations = 0;
@@ -78,16 +78,16 @@
 
                     var stops = new List<(int, int)>();
 
-                    while (((x * x) + (y * y) <= 4.0) && iterations < endBand)
+                    while (x * x + y * y <= 4.0 && iterations < endBand)
                     {
-                        var xTemp = (x * x) - (y * y) + pixelX;
-                        y = (2.0 * x * y) + pixelY;
+                        var xTemp = x * x - y * y + pixelX;
+                        y = 2.0 * x * y + pixelY;
                         x = xTemp;
 
-                        var zx = (x - _minX - (0.5 * pixelWidth)) / pixelWidth;
+                        var zx = (x - _minX - 0.5 * pixelWidth) / pixelWidth;
                         zx = Math.Round(zx, 0);
 
-                        var zy = (_maxY - y + (0.5 * pixelHeight)) / pixelHeight;
+                        var zy = (_maxY - y + 0.5 * pixelHeight) / pixelHeight;
                         zy = Math.Round(zy, 0);
 
                         if (zx >= 0 && zx < _xRes && zy >= 0 && zy < _yRes)
@@ -107,7 +107,7 @@
                         var progress = Math.Round((double)(s + 1) / sampleCount * 100);
 
                         Console.SetCursorPosition(0, Console.GetCursorPosition().Top - 1);
-                        Console.WriteLine($"Render progress: {cycles+1}/{opts.Cycles} {progress + 1}% ...");
+                        Console.WriteLine($"Render progress: {cycles + 1}/{opts.Cycles} {progress + 1}% ...");
                     }
                 }
             }
@@ -140,7 +140,7 @@
 
         public int Normalize(double brightness, double highest)
         {
-            return (int)Math.Round((double)((brightness * 255) / highest));
+            return (int)Math.Round((double)(brightness * 255 / highest));
         }
 
         public double Rand()
