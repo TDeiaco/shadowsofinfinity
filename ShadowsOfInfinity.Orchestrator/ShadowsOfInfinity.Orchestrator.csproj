@@ -8,6 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+    <PackageReference Include="Expression.Interaction" Version="3.0.40218" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ShadowsOfInfinity.Exe\ShadowsOfInfinity.Exe.csproj" />
   </ItemGroup>
 

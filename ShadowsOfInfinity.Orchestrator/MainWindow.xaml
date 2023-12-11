@@ -3,7 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ShadowsOfInfinity.Orchestrator"
+        xmlns:local="clr-namespace:ShadowsOfInfinity.Orchestrator" 
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d"
         Background="{DynamicResource BackgroundBrush}"
         Title="{Binding WindowTitle}" Height="450" Width="800">
@@ -23,6 +24,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
@@ -31,6 +33,88 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <TextBlock FontSize="24">Shadows of Infinity</TextBlock>
+        <TextBlock Grid.Row="0" 
+                   Grid.Column="0"  
+                   FontSize="24"
+                   Style="{DynamicResource Header}"
+                   Text="Shadows of Infinity" />
+
+        <StackPanel Grid.Row="1" 
+                    Grid.Column="0" 
+                    Orientation="Vertical">
+            <ComboBox ItemsSource="{Binding RendererItems}" SelectedItem="{Binding SelectedRenderer}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding SelectedRendererChangedCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </ComboBox>
+
+            <StackPanel Orientation="Vertical" Visibility="{Binding ShowBuddhabrot, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <TextBlock Text="Buddhabrot Config"
+                           Style="{DynamicResource Text}"/>
+
+                <Label>Samples:</Label>
+                <TextBox Text="{Binding Samples}" />
+                <Label>Range Start:</Label>
+                <TextBox Text="{Binding RangeStart}" />
+                <Label>Range End:</Label>
+                <TextBox Text="{Binding RangeEnd}" />
+            </StackPanel>
+            
+            <StackPanel Orientation="Vertical" Visibility="{Binding ShowMandelbrot, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <TextBlock Text="Mandelbrot Config"
+                           Style="{DynamicResource Text}"/>
+                <Label>Iterations:</Label>
+                <TextBox Text="{Binding Iterations}" />
+            </StackPanel>
+            
+            <StackPanel Orientation="Vertical" Visibility="{Binding ShowVisagebrot, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <TextBlock Text="Visagebrot Config"
+                           Style="{DynamicResource Text}"/>
+
+                <Label>Samples:</Label>
+                <TextBox Text="{Binding Samples}" />
+
+                <Label>Band:</Label>
+                <TextBox Text="{Binding Band}" />
+
+                <Label>Cycles:</Label>
+                <TextBox Text="{Binding Cycles}" />
+            </StackPanel>
+            
+            <StackPanel Orientation="Vertical" Visibility="{Binding ShowNebulabrot, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <TextBlock Text="Nebulabrot Config"
+                           Style="{DynamicResource Text}"/>
+
+                <Label>Samples:</Label>
+                <TextBox Text="{Binding Samples}" />
+
+                <Label>Order:</Label>
+                <TextBox Text="{Binding Order}" />
+            </StackPanel>
+            
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" 
+                    Grid.Column="0" >
+            <Button Width="Auto"
+                    Content="Add Config"
+                    >
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <i:InvokeCommandAction Command="{Binding AddRenderConfigCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+        </StackPanel>
+
+        <StackPanel Grid.Row="0" 
+                    Grid.Column="1"
+                    Grid.RowSpan="3">
+            <ListBox ItemsSource="{Binding RenderConfigs, UpdateSourceTrigger=PropertyChanged}">
+                
+            </ListBox>
+        </StackPanel>
     </Grid>
 </Window>
