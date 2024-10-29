@@ -3,6 +3,11 @@
     public class Nebulabrot : BaseRenderer
     {
         private NebulabrotOptions _opts;
+
+        private int _channelColorIndex = 0;
+        private int _channelStartBandIndex = 1;
+        private int _channelEndBandIndex = 2;
+
         public Nebulabrot()
         {
             Console.WriteLine("Rendering Nebulabrot");
@@ -23,10 +28,10 @@
             var updateRate = sampleCount / 100;
             if (updateRate <= 0) updateRate = 1;
 
-            char a, b, c;
+            char channel0, channel1, channel2;
             if (opts.Order == null)
             {
-                a = 'b'; b = 'g'; c = 'r';
+                channel0 = 'r'; channel1 = 'g'; channel2 = 'b';
             }
             else if (opts.Order.Length != 3)
             {
@@ -35,10 +40,50 @@
             }
             else
             {
-                a = opts.Order[0];
-                b = opts.Order[1];
-                c = opts.Order[2];
+                channel0 = opts.Order[0];
+                channel1 = opts.Order[1];
+                channel2 = opts.Order[2];
             }
+
+            var rBandSplit = opts.RBand.Split('-');
+            var rStartBand = Convert.ToInt32(rBandSplit[0]);
+            var rEndBand = Convert.ToInt32(rBandSplit[1]);
+
+            var gBandSplit = opts.RBand.Split('-');
+            var gStartBand = Convert.ToInt32(gBandSplit[0]);
+            var gEndBand = Convert.ToInt32(gBandSplit[1]);
+
+            var bBandSplit = opts.RBand.Split('-');
+            var bStartBand = Convert.ToInt32(bBandSplit[0]);
+            var bEndBand = Convert.ToInt32(bBandSplit[1]);
+
+            var channelMap = new Dictionary<int, ChannelDefinition>();
+
+            int startBand = 0, endBand = 0;
+            switch (channel0)
+            {
+                case 'r': startBand = rStartBand; endBand = rEndBand; break;
+                case 'g': startBand = gStartBand; endBand = gEndBand; break;
+                case 'b': startBand = bStartBand; endBand = bEndBand; break;
+            }
+            channelMap.Add(0, new ChannelDefinition() { Color = opts.Order[0], StartBand = startBand, EndBand = endBand });
+
+            switch (channel1)
+            {
+                case 'r': startBand = rStartBand; endBand = rEndBand; break;
+                case 'g': startBand = gStartBand; endBand = gEndBand; break;
+                case 'b': startBand = bStartBand; endBand = bEndBand; break;
+            }
+            channelMap.Add(1, new ChannelDefinition() { Color = opts.Order[1], StartBand = startBand, EndBand = endBand });
+
+            switch (channel2)
+            {
+                case 'r': startBand = rStartBand; endBand = rEndBand; break;
+                case 'g': startBand = gStartBand; endBand = gEndBand; break;
+                case 'b': startBand = bStartBand; endBand = bEndBand; break;
+            }
+
+            channelMap.Add(2, new ChannelDefinition() { Color = opts.Order[2], StartBand = startBand, EndBand = endBand });
 
             Console.WriteLine($"Width: {opts.Width}, Height: {opts.Height}");
             Console.WriteLine($"Samples: {sampleCount}");
@@ -53,95 +98,69 @@
             var pixelWidth = frameWidth / _xRes;
             var pixelHeight = frameHeight / _yRes;
 
-            double[,] histogramA = new double[_xRes, _yRes];
-            double[,] histogramB = new double[_xRes, _yRes];
-            double[,] histogramC = new double[_xRes, _yRes];
+            double[,,] histogram = new double[3, _xRes, _yRes];
 
-            var maxA = 0.0;
-            var maxB = 0.0;
-            var maxC = 0.0;
+            double[] maxes = new double [3];
 
-            for (int colorFactor = 0; colorFactor < 3; colorFactor++)
+            for (int histogramSelector = 0; histogramSelector < 3; histogramSelector++)
             {
-                var iterationCount = Math.Pow(10, colorFactor + 2);
-                for (var s = 0; s < sampleCount; s++)
+                for (var cycles = 0; cycles < opts.Cycles; cycles++)
                 {
-                    var pixelX = Rand() * frameWidth + _minX;
-                    var pixelY = Rand() * frameHeight + _minY;
+                    //The iteration count is the endBand for the particular color
+                    var iterationCount = channelMap[histogramSelector].EndBand + 1;  
 
-                    // Iterate over each pixel
-                    int iterations = 0;
-
-                    double x = 0.0;
-                    double y = 0.0;
-
-                    var stops = new List<(int, int)>();
-
-                    while (x * x + y * y <= 4.0 && iterations < iterationCount)
+                    for (var s = 0; s < sampleCount; s++)
                     {
-                        var xTemp = x * x - y * y + pixelX;
-                        y = 2.0 * x * y + pixelY;
-                        x = xTemp;
+                        var pixelX = Rand() * frameWidth + _minX;
+                        var pixelY = Rand() * frameHeight + _minY;
 
-                        var zx = (x - _minX - 0.5 * pixelWidth) / pixelWidth;
-                        zx = Math.Round(zx, 0);
+                        // Iterate over each pixel
+                        int iterations = 0;
 
-                        var zy = (_maxY - y + 0.5 * pixelHeight) / pixelHeight;
-                        zy = Math.Round(zy, 0);
+                        double x = 0.0;
+                        double y = 0.0;
 
-                        if (zx >= 0 && zx < _xRes && zy >= 0 && zy < _yRes)
-                            stops.Add(((int)zx, (int)zy));
+                        var stops = new List<(int, int)>();
 
-                        iterations++;
-                    }
-
-                    //Only capture trajectories that escape
-                    if (iterations != iterationCount)
-                        foreach (var stop in stops)
+                        while (x * x + y * y <= 4.0 && iterations < iterationCount)
                         {
-                            switch (colorFactor)
-                            {
-                                case 0:
-                                    histogramA[stop.Item1, stop.Item2] += 1;
-                                    break;
-                                case 1:
-                                    histogramB[stop.Item1, stop.Item2] += 1;
-                                    break;
-                                case 2:
-                                    histogramC[stop.Item1, stop.Item2] += 1;
-                                    break;
-                            }
+                            var xTemp = x * x - y * y + pixelX;
+                            y = 2.0 * x * y + pixelY;
+                            x = xTemp;
+
+                            var zx = (x - _minX - 0.5 * pixelWidth) / pixelWidth;
+                            zx = Math.Round(zx, 0);
+
+                            var zy = (_maxY - y + 0.5 * pixelHeight) / pixelHeight;
+                            zy = Math.Round(zy, 0);
+
+                            if (zx >= 0 && zx < _xRes && zy >= 0 && zy < _yRes)
+                                stops.Add(((int)zx, (int)zy));
+
+                            iterations++;
                         }
 
-                    // every 10k samples, log progress
-                    if (s % updateRate == 0)
-                    {
-                        var progress = Math.Round((double)(s + 1) / sampleCount * 100);
+                        if (iterations > channelMap[histogramSelector].StartBand && iterations < channelMap[histogramSelector].EndBand)
+                            foreach (var stop in stops)
+                                histogram[histogramSelector, stop.Item1, stop.Item2] += 1;
 
-                        Console.SetCursorPosition(0, Console.GetCursorPosition().Top - 1);
-                        Console.WriteLine($"Render progress: {colorFactor + 1}/3 {progress + 1}% ...");
+                        // every 10k samples, log progress
+                        if (s % updateRate == 0)
+                        {
+                            var progress = Math.Round((double)(s + 1) / sampleCount * 100);
+
+                            Console.SetCursorPosition(0, Console.GetCursorPosition().Top - 1);
+                            Console.WriteLine($"Render progress: Channel:{histogramSelector + 1}/3 Cycles:{cycles + 1}/{opts.Cycles} {progress + 1}% ...");
+                        }
                     }
                 }
 
-                var count = 0.0;
                 for (int x = 0; x < _xRes; x++)
                     for (int y = 0; y < _yRes; y++)
                     {
-                        switch (colorFactor)
-                        {
-                            case 0:
-                                count = histogramA[x, y];
-                                if (count > maxA) maxA = count;
-                                break;
-                            case 1:
-                                count = histogramB[x, y];
-                                if (count > maxB) maxB = count;
-                                break;
-                            case 2:
-                                count = histogramC[x, y];
-                                if (count > maxC) maxC = count;
-                                break;
-                        }
+                        double count = histogram[histogramSelector, x, y];
+                        if (count > maxes[histogramSelector]) maxes[histogramSelector] = count;
+
                     }
             }
 
@@ -154,10 +173,6 @@
                     if (y == 0)
                         continue;
 
-                    var brightnessA = histogramA[x, y];
-                    var brightnessB = histogramB[x, y];
-                    var brightnessC = histogramC[x, y];
-
                     var brightnessRed = 0.0;
                     var brightnessGreen = 0.0;
                     var brightnessBlue = 0.0;
@@ -165,25 +180,25 @@
                     var maxRed = 0.0;
                     var maxGreen = 0.0;
                     var maxBlue = 0.0;
-                    switch (a)
+                    switch (channelMap[0].Color)
                     {
-                        case 'r': brightnessRed = brightnessA; maxRed = maxA; break;
-                        case 'g': brightnessGreen = brightnessA; maxGreen = maxA; break;
-                        case 'b': brightnessBlue = brightnessA; maxBlue = maxA; break;
+                        case 'r': brightnessRed = histogram[0, x, y]; maxRed = maxes[0]; break;
+                        case 'g': brightnessGreen = histogram[0, x, y]; maxGreen = maxes[0]; break;
+                        case 'b': brightnessBlue = histogram[0, x, y]; maxBlue = maxes[0]; break;
                     }
 
-                    switch (b)
+                    switch (channelMap[1].Color)
                     {
-                        case 'r': brightnessRed = brightnessB; maxRed = maxB; break;
-                        case 'g': brightnessGreen = brightnessB; maxGreen = maxB; break;
-                        case 'b': brightnessBlue = brightnessB; maxBlue = maxB; break;
+                        case 'r': brightnessRed = histogram[1, x, y]; maxRed = maxes[1]; break;
+                        case 'g': brightnessGreen = histogram[1, x, y]; maxGreen = maxes[1]; break;
+                        case 'b': brightnessBlue = histogram[1, x, y]; maxBlue = maxes[1]; break;
                     }
 
-                    switch (c)
+                    switch (channelMap[2].Color)
                     {
-                        case 'r': brightnessRed = brightnessC; maxRed = maxC; break;
-                        case 'g': brightnessGreen = brightnessC; maxGreen = maxC; break;
-                        case 'b': brightnessBlue = brightnessC; maxBlue = maxC; break;
+                        case 'r': brightnessRed = histogram[2, x, y]; maxRed = maxes[2]; break;
+                        case 'g': brightnessGreen = histogram[2, x, y]; maxGreen = maxes[2]; break;
+                        case 'b': brightnessBlue = histogram[2, x, y]; maxBlue = maxes[2]; break;
                     }
 
 

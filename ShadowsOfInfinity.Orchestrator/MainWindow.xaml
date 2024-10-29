@@ -30,7 +30,8 @@
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="48pt" />
         </Grid.ColumnDefinitions>
 
         <TextBlock Grid.Row="0" 
@@ -99,8 +100,7 @@
         <StackPanel Grid.Row="2" 
                     Grid.Column="0" >
             <Button Width="Auto"
-                    Content="Add Config"
-                    >
+                    Content="Add Config">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
                         <i:InvokeCommandAction Command="{Binding AddRenderConfigCommand}"/>
@@ -112,9 +112,23 @@
         <StackPanel Grid.Row="0" 
                     Grid.Column="1"
                     Grid.RowSpan="3">
-            <ListBox ItemsSource="{Binding RenderConfigs, UpdateSourceTrigger=PropertyChanged}">
+            <ListBox Margin="12 24 12 12" ItemsSource="{Binding RenderConfigs, UpdateSourceTrigger=PropertyChanged}">
                 
             </ListBox>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2"
+                    Grid.Column="2">
+
+            <Button Width="Auto"
+                    Content="Add Config">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <i:InvokeCommandAction Command="{Binding ExecuteCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+
         </StackPanel>
     </Grid>
 </Window>

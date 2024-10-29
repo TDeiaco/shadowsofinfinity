@@ -3,8 +3,8 @@
     "ShadowsOfInfinity": {
       "commandName": "Project",
       //"commandLineArgs": "visagebrot -w 500 -h 500 -s 10000 -b 8000-10000 -c 10"
-      "commandLineArgs": "buddhabrot -w 500 -h 500 -s 1000000 -r 1000-1000"
-      //"commandLineArgs": "nebulabrot -w 500 -h 500 -s 10000 -o brg"
+      //"commandLineArgs": "buddhabrot -w 500 -h 500 -s 1000000 -r 1000-1000"
+      "commandLineArgs": "nebulabrot -w 1000 -h 1000 -s 1000000 -o brg -r 3000-9000 -g 3000-9000 -b 3000-9000 -c 30"
       //"commandLineArgs": "mandelbrot -w 500 -h 500 -i 10000"
     }
   }

@@ -20,8 +20,14 @@ namespace ShadowsOfInfinity.Orchestrator
             SelectedRenderer = new ComboboxItem() { Id = 0, Value = "Mandelbrot" };
             SelectedRendererChangedCommand = new RelayCommand(SelectedRendererChanged);
             AddRenderConfigCommand = new RelayCommand(AddRenderConfig);
+            ExecuteCommand = new RelayCommand(Execute);
 
             RenderConfigs = new ObservableCollection<IRenderConfig>();
+        }
+
+        private void Execute(object obj)
+        {
+            throw new NotImplementedException();
         }
 
         private void AddRenderConfig(object obj)
@@ -77,6 +83,7 @@ namespace ShadowsOfInfinity.Orchestrator
 
         public ICommand SelectedRendererChangedCommand { get; set; }
         public ICommand AddRenderConfigCommand { get; set; }
+        public ICommand ExecuteCommand { get; set; }
 
         public string WindowTitle => "Shadows of Infinity";
 
